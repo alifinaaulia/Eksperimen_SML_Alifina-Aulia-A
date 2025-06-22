@@ -1,14 +1,19 @@
 name: Run Preprocessing Automatically
+
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: write 
+
 jobs:
   preprocess:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Setup Python
@@ -21,6 +26,14 @@ jobs:
           pip install --upgrade pip
           pip install pandas
 
-      - name: Jalankan preprocessing script
+      - name: Run preprocessing script
         run: |
           python preprocessing/automate_Alifina-Aulia-A.py
+
+      - name: Commit hasil preprocessing
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add preprocessing/online_retail_preprocessing.csv
+          git commit -m "Add online_retail_preprocessing.csv hasil preprocessing"
+          git push
